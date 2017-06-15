@@ -34,6 +34,14 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
     NSString *path = [[command.arguments objectAtIndex:0] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
 	NSString *contentType = nil;
 	BOOL showPreview = YES;
+	NSDictionary *position = @{
+		@"x" : -120.0f,
+		@"y" : 1000.0f
+	};
+	NSDictionary *size = @{
+		@"width" : -120.0f,
+		@"height" : 1000.0f
+	};
 
 	if([command.arguments count] == 2) { // Includes contentType
 		contentType = [command.arguments objectAtIndex:1];
@@ -41,6 +49,27 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 	if ([command.arguments count] == 3) {
 		showPreview = [[command.arguments objectAtIndex:2] boolValue];
+	}
+
+	if ([command.arguments count] == 4) { // includes options
+		if([command.arguments objectAtIndex:3] objectForKey:@"position"]){
+			NSDictionary *argPosition = [[command.arguments objectAtIndex:3] objectForKey:@"position"];
+			if ([argPosition objectForKey:@"x"]) {
+				position.x = [argPosition objectForKey:@"x"] floatValue];
+			}
+			if ([argPosition objectForKey:@"y"]) {
+				position.y = [argPosition objectForKey:@"y"] floatValue];
+			}
+		}
+		if([command.arguments objectAtIndex:3] objectForKey:@"size"]){
+			NSDictionary *argSize = [[command.arguments objectAtIndex:3] objectForKey:@"size"];
+			if ([argSize objectForKey:@"width"]) {
+				size.width = [argSize objectForKey:@"width"] floatValue];
+			}
+			if ([argSize objectForKey:@"height"]) {
+				size.height = [argSize objectForKey:@"height"] floatValue];
+			}
+		}
 	}
 
 	CDVViewController* cont = (CDVViewController*)[super viewController];
@@ -79,7 +108,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 			wasOpened = [docController presentPreviewAnimated: NO];
 		} else {
 			CDVViewController* cont = self.cdvViewController;
-			CGRect rect = CGRectMake(0, 0, cont.view.bounds.size.width, cont.view.bounds.size.height);
+			CGRect rect = CGRectMake([position objectForKey:@"x"], [position objectForKey:@"y"], [size objectForKey:@"width"], [size objectForKey:@"height"]);
 			wasOpened = [docController presentOpenInMenuFromRect:rect inView:cont.view animated:YES];
 		}
 

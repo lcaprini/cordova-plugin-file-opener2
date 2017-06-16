@@ -34,40 +34,23 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
     NSString *path = [[command.arguments objectAtIndex:0] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
 	NSString *contentType = nil;
 	BOOL showPreview = YES;
-	NSDictionary *position = @{
-		@"x" : -120.0f,
-		@"y" : 1000.0f
-	};
-	NSDictionary *size = @{
-		@"width" : -120.0f,
-		@"height" : 1000.0f
-	};
+	NSMutableDictionary *position = [[NSMutableDictionary alloc] initWithDictionary:@{
+                                                                                  @"x" : [NSNumber numberWithFloat: -120],
+                                                                                  @"y" : [NSNumber numberWithFloat: 1000]
+                                                                                  }];
 
-	if([command.arguments count] == 2) { // Includes contentType
-		contentType = [command.arguments objectAtIndex:1];
-	}
+	contentType = [command.arguments objectAtIndex:1];
 
-	if ([command.arguments count] == 3) {
+	if ([command.arguments count] > 2) {
 		showPreview = [[command.arguments objectAtIndex:2] boolValue];
-	}
-
-	if ([command.arguments count] == 4) { // includes options
-		if([command.arguments objectAtIndex:3] objectForKey:@"position"]){
+        
+		if([[command.arguments objectAtIndex:3] objectForKey:@"position"]){
 			NSDictionary *argPosition = [[command.arguments objectAtIndex:3] objectForKey:@"position"];
 			if ([argPosition objectForKey:@"x"]) {
-				position.x = [argPosition objectForKey:@"x"] floatValue];
+				[position setObject:[argPosition objectForKey:@"x"] forKey:@"x"];
 			}
 			if ([argPosition objectForKey:@"y"]) {
-				position.y = [argPosition objectForKey:@"y"] floatValue];
-			}
-		}
-		if([command.arguments objectAtIndex:3] objectForKey:@"size"]){
-			NSDictionary *argSize = [[command.arguments objectAtIndex:3] objectForKey:@"size"];
-			if ([argSize objectForKey:@"width"]) {
-				size.width = [argSize objectForKey:@"width"] floatValue];
-			}
-			if ([argSize objectForKey:@"height"]) {
-				size.height = [argSize objectForKey:@"height"] floatValue];
+                [position setObject:[argPosition objectForKey:@"y"] forKey:@"y"];
 			}
 		}
 	}
@@ -108,7 +91,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 			wasOpened = [docController presentPreviewAnimated: NO];
 		} else {
 			CDVViewController* cont = self.cdvViewController;
-			CGRect rect = CGRectMake([position objectForKey:@"x"], [position objectForKey:@"y"], [size objectForKey:@"width"], [size objectForKey:@"height"]);
+			CGRect rect = CGRectMake([[position objectForKey:@"x"] floatValue], [[position objectForKey:@"y"] floatValue], 1000.0f, 150.0f);
 			wasOpened = [docController presentOpenInMenuFromRect:rect inView:cont.view animated:YES];
 		}
 

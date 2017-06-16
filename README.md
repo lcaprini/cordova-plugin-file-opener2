@@ -69,10 +69,6 @@ Open a system modal to open PDF document with one of the already installed app a
             position: {
                 x : 200,
                 y : 150
-            },
-            size : {
-                width : 400,
-                height: 250
             }
         }
     );

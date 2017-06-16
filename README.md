@@ -73,6 +73,8 @@ Open a system modal to open PDF document with one of the already installed app a
         }
     );
 
+The `position` attribute is available only on iPad.
+
 Notes
 ------
 
